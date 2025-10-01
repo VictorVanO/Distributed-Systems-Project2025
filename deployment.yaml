@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scalable-project-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: scalable-project-app
+  template:
+    metadata:
+      labels:
+        app: scalable-project-app
+    spec:
+      containers:
+        - name: scalable-project-app
+          image: scalable-project-app:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+
+# Déploiement : kubectl apply -f deployment.yaml
+# On peut mettre plusieurs déploiement dans un même fichier en les séparant par 3 tirets
