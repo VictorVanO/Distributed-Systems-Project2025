@@ -16,4 +16,4 @@ if __name__ == "__main__":
 
 # Start:
 # docker build -t scalable-project-app:1.0 .
-# docker run -d -p 8080:8080 scalable-project-app:1.0
+# docker compose up --build
