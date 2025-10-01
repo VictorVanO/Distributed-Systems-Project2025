@@ -12,3 +12,8 @@ def hello():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
+
+
+# Start:
+# docker build -t scalable-project-app:1.0 .
+# docker run -d -p 8080:8080 scalable-project-app:1.0
