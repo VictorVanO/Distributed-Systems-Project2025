@@ -7,6 +7,8 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    networks:
+      - mynet
 
   nginx:
     image: nginx:latest
@@ -18,3 +20,9 @@ services:
     depends_on:
       - web
     restart: always
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    driver: bridge
