@@ -1,22 +1,32 @@
 import unittest
-from app import app
+from app import app, contacts
 
 class TestFlaskApp(unittest.TestCase):
     
     def setUp(self):
-        # Set up test client before each test
         self.app = app.test_client()
         self.app.testing = True
+        # Reset contacts to initial state
+        contacts.clear()
+        contacts.extend([
+            {"name": "Alice Dupont", "email": "alice@mail.com", "phone": "+32 475 11 22 33"},
+            {"name": "Karim El Amrani", "email": "karim@example.org", "phone": "+32 484 44 55 66"},
+        ])
     
-    def test_home_route(self):
+    def test_home_route_get(self):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode('utf-8'), 'Distributed Systems Project 2025')
+        self.assertIn(b'Carnet de contacts', response.data)
+        self.assertIn(b'Alice Dupont', response.data)
     
-    def test_hello_route(self):
-        response = self.app.get('/hello')
+    def test_add_contact(self):
+        response = self.app.post('/', data={
+            'name': 'Test User',
+            'email': 'test@example.com',
+            'phone': '+32 400 00 00 00'
+        }, follow_redirects=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.decode('utf-8'), 'Hello, World')
+        self.assertIn(b'Test User', response.data)
     
     def test_404_route(self):
         response = self.app.get('/nonexistent')
