@@ -40,4 +40,28 @@ jobs:
         curl --fail http://localhost:8080/ || (docker logs test_app && exit 1)
       
     - name: Stop and remove container
+      if: always()
       run: docker rm -f test_app
+
+    - name: Start Minikube
+      uses: medyagh/setup-minikube@latest
+
+    - name: Load Docker image to Minikube
+      run: |
+        minikube image load scalable-project-app:1.0
+
+    - name: Deploy to test environment
+      run: |
+        kubectl apply -f deployment.yaml
+        kubectl apply -f service.yaml
+
+    - name: Wait for deployment
+      run: |
+        kubectl rollout status deployment/scalable-project-deployment
+        kubectl get pods
+
+    - name: Test deployed application
+      run: |
+        kubectl port-forward service/scalable-project-service 8080:8080 &
+        sleep 5
+        curl --fail http://localhost:8080/
