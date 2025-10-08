@@ -26,5 +26,8 @@ jobs:
         sleep 5
         curl --fail http://localhost:8080/ || (docker logs test_app && exit 1)
 
+    - name: Run unit tests
+      run : python app_test.py
+      
     - name: Stop and remove container
       run: docker rm -f test_app
