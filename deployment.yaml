@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scalable-project-deployment
+  annotations:
+    fluxcd.io/automated: "true"
 spec:
   replicas: 4
   selector:
@@ -14,10 +16,9 @@ spec:
     spec:
       containers:
         - name: scalable-project-app
-          image: scalable-project-app:1.0
-          imagePullPolicy: IfNotPresent
+          image: vic20253/scalable-project-app:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
-
-# Déploiement : kubectl apply -f deployment.yaml
-# On peut mettre plusieurs déploiement dans un même fichier en les séparant par 3 tirets
+      imagePullSecrets:
+        - name: dockerhub-credentials
