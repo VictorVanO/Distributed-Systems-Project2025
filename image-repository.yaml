@@ -1,0 +1,10 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: scalable-project-app
+  namespace: flux-system
+spec:
+  image: vic20253/scalable-project-app
+  interval: 5m
+  secretRef:
+    name: dockerhub-credentials
