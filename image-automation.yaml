@@ -39,7 +39,7 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-      messageTemplate: '[ci skip] Update image to {{range .Updated.Images}}{{println .}}{{end}}'
+      messageTemplate: '[ci skip] Update image to {{range .Changed.Images}}{{println .}}{{end}}'
     push:
       branch: main
   update:
