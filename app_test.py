@@ -6,7 +6,7 @@ class TestFlaskApp(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.app.testing = True
-        # Reset contacts
+        # Reset contact
         contacts.clear()
         contacts.extend([
             {"name": "Alice Dupont", "email": "alice@mail.com", "phone": "+32 475 11 22 33"},
