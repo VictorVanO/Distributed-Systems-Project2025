@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scalable-project-deployment
-  annotations:
-    fluxcd.io/automated: "true"
 spec:
   replicas: 4
   selector:
@@ -16,7 +14,7 @@ spec:
     spec:
       containers:
         - name: scalable-project-app
-          image: vic20253/scalable-project-app:latest
+          image: vic20253/scalable-project-app:latest # {"$imagepolicy": "flux-system:scalable-project-app"}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
