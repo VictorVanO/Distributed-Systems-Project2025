@@ -9,7 +9,7 @@ class TestFlaskApp(unittest.TestCase):
         # Reset contacts to initial state 
         contacts.clear()
         contacts.extend([
-            {"name": "Alice Dupuis", "email": "alice@mail.com", "phone": "+32 475 11 22 33"},
+            {"name": "Alice Dupont", "email": "alice@mail.com", "phone": "+32 475 11 22 33"},
             {"name": "Karim El Amrani", "email": "karim@example.org", "phone": "+32 484 44 55 66"},
         ])
     
