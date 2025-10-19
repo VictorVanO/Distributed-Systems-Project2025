@@ -10,7 +10,7 @@ class TestFlaskApp(unittest.TestCase):
         contacts.clear()
         contacts.extend([
             {"name": "Alice Dupont", "email": "alice@mail.com", "phone": "+32 475 11 22 33"},
-            {"name": "Karim El Amrani", "email": "karim@example.org", "phone": "+32 484 44 55 66"},
+            {"name": "Karim Amrani", "email": "karim@example.org", "phone": "+32 484 44 55 66"},
         ])
     
     def test_home_route_get(self):
