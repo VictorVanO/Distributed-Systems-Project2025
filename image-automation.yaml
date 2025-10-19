@@ -19,7 +19,7 @@ spec:
     name: scalable-project-app
   policy:
     semver:
-      range: '>=1.0.0'
+      range: '*'
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
