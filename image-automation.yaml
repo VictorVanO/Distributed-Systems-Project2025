@@ -19,7 +19,7 @@ spec:
     name: scalable-project-app
   policy:
     semver:
-      range: '*'
+      range: '>=1.0.0'
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
@@ -39,7 +39,7 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-      messageTemplate: '[ci skip] Update image to {{range .Changed.Images}}{{println .}}{{end}}'
+      messageTemplate: '[ci skip] Update image tags'
     push:
       branch: main
   update:
