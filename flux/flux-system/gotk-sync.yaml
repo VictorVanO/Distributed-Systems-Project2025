@@ -32,9 +32,10 @@ metadata:
   name: scalable-project
   namespace: flux-system
 spec:
-  interval: 1m0s
+  interval: 1m
   path: ./k8s
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
+  targetNamespace: scalable-project
