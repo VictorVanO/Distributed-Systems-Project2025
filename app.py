@@ -3,7 +3,7 @@ from flask import Flask, request, redirect, render_template_string
 app = Flask(__name__)
 
 contacts = [
-    {"name": "Madame Dulont", "email": "alice@mail.com", "phone": "+32 475 11 22 33"},
+    {"name": "Madame Dupont", "email": "alice@mail.com", "phone": "+32 475 11 22 33"},
     {"name": "Karim Amrani", "email": "karim@example.org", "phone": "+32 484 44 55 66"},
 ]
 
