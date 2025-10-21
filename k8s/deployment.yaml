@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: scalable-project-app
-          image: vic20253/scalable-project-app:1.1.39 # {"$imagepolicy": "flux-system:scalable-project-app"}
+          image: vic20253/scalable-project-app:1.1.40 # {"$imagepolicy": "flux-system:scalable-project-app"}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
