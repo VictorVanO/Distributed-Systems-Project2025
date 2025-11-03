@@ -1,0 +1,6 @@
+echo "Configuring replication..."
+docker exec -it mysql_s0_primary mysql -uroot -proot -e "CREATE USER IF NOT EXISTS 'repl'@'%' IDENTIFIED WITH mysql_native_password BY 'replpass'; GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%'; FLUSH PRIVILEGES;"
+docker exec -it mysql_s1_primary mysql -uroot -proot -e "CREATE USER IF NOT EXISTS 'repl'@'%' IDENTIFIED WITH mysql_native_password BY 'replpass'; GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%'; FLUSH PRIVILEGES;"
+docker exec -it mysql_s0_replica mysql -uroot -proot -e "STOP REPLICA; RESET REPLICA ALL; CHANGE REPLICATION SOURCE TO SOURCE_HOST='mysql_s0_primary', SOURCE_USER='repl', SOURCE_PASSWORD='replpass', SOURCE_AUTO_POSITION=1; CHANGE REPLICATION FILTER REPLICATE_WILD_IGNORE_TABLE=('mysql.%'); START REPLICA;"
+docker exec -it mysql_s1_replica mysql -uroot -proot -e "STOP REPLICA; RESET REPLICA ALL; CHANGE REPLICATION SOURCE TO SOURCE_HOST='mysql_s1_primary', SOURCE_USER='repl', SOURCE_PASSWORD='replpass', SOURCE_AUTO_POSITION=1; CHANGE REPLICATION FILTER REPLICATE_WILD_IGNORE_TABLE=('mysql.%'); START REPLICA;"
+echo "Replication initialized ✅"

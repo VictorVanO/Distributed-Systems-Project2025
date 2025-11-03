@@ -1,9 +1,20 @@
 version: "3.9"
+
 services:
   web:
     build: .
-    image : scalable-project-app:1.0
+    image: scalable-project-app:1.0
     container_name: scalable-project-app
+    environment:
+      DB_URI_S0_PRIMARY: "user:pass@mysql_s0_primary:3306/contactsdb"
+      DB_URI_S0_REPLICA: "user:pass@mysql_s0_replica:3306/contactsdb"
+      DB_URI_S1_PRIMARY: "user:pass@mysql_s1_primary:3306/contactsdb"
+      DB_URI_S1_REPLICA: "user:pass@mysql_s1_replica:3306/contactsdb"
+    depends_on:
+      - mysql_s0_primary
+      - mysql_s0_replica
+      - mysql_s1_primary
+      - mysql_s1_replica
     ports:
       - "8080:8080"
     restart: always
@@ -22,6 +33,122 @@ services:
     restart: always
     networks:
       - mynet
+
+  # -------- SHARD 0 --------
+  mysql_s0_primary:
+    image: mysql:8.0
+    container_name: mysql_s0_primary
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: contactsdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    command: [
+      "mysqld",
+      "--server-id=10",
+      "--log-bin=mysql-bin-10",
+      "--gtid_mode=ON",
+      "--enforce_gtid_consistency=ON"
+    ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - s0p:/var/lib/mysql
+    networks:
+      - mynet
+
+  mysql_s0_replica:
+    image: mysql:8.0
+    container_name: mysql_s0_replica
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: contactsdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    command: [
+      "mysqld",
+      "--server-id=11",
+      "--relay-log=relay-bin-11",
+      "--gtid_mode=ON",
+      "--enforce_gtid_consistency=ON",
+      "--read_only=ON"
+    ]
+    depends_on:
+      mysql_s0_primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - s0r:/var/lib/mysql
+    networks:
+      - mynet
+
+  # -------- SHARD 1 --------
+  mysql_s1_primary:
+    image: mysql:8.0
+    container_name: mysql_s1_primary
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: contactsdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    command: [
+      "mysqld",
+      "--server-id=20",
+      "--log-bin=mysql-bin-20",
+      "--gtid_mode=ON",
+      "--enforce_gtid_consistency=ON"
+    ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - s1p:/var/lib/mysql
+    networks:
+      - mynet
+
+  mysql_s1_replica:
+    image: mysql:8.0
+    container_name: mysql_s1_replica
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: contactsdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    command: [
+      "mysqld",
+      "--server-id=21",
+      "--relay-log=relay-bin-21",
+      "--gtid_mode=ON",
+      "--enforce_gtid_consistency=ON",
+      "--read_only=ON"
+    ]
+    depends_on:
+      mysql_s1_primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - s1r:/var/lib/mysql
+    networks:
+      - mynet
+
+volumes:
+  s0p: {}
+  s0r: {}
+  s1p: {}
+  s1r: {}
 
 networks:
   mynet:
