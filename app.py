@@ -3,7 +3,7 @@ from flask import Flask, request, redirect, render_template_string, abort
 
 app = Flask(__name__)
 
-# --- Connexions MySQL (simples, uniquement les primaires : s0 et s1) ---
+# --- Connexions MySQL (simples, uniquement les primaires : s0 et s1)
 def connect(uri: str):
     # URI sous forme: "user:pass@host:port/db"
     userpass, hostdb = uri.split("@", 1)
