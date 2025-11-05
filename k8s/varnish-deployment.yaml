@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish-cache
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: varnish
+  template:
+    metadata:
+      labels:
+        app: varnish
+    spec:
+      containers:
+        - name: varnish
+          image: varnish:7.5
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: varnish-config
+              mountPath: /etc/varnish
+          env:
+            - name: VARNISH_SIZE
+              value: 256M
+      volumes:
+        - name: varnish-config
+          configMap:
+            name: varnish-config

@@ -1,0 +1,29 @@
+vcl 4.1;
+
+backend default {
+    .host = "scalable-project-service";
+    .port = "8080";
+}
+
+sub vcl_recv {
+    if (req.method != "GET" && req.method != "HEAD") {
+        return (pass);
+    }
+
+    if (req.http.Cookie) {
+        return (pass);
+    }
+}
+
+sub vcl_backend_response {
+    set beresp.ttl = 60s;
+}
+
+sub vcl_deliver {
+    if (obj.hits > 0) {
+        set resp.http.X-Cache = "HIT";
+    } else {
+        set resp.http.X-Cache = "MISS";
+    }
+    set resp.http.X-Varnish-Server = "Varnish-Proxy";
+}
